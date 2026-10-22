@@ -1,5 +1,7 @@
 /* Variáveis globais: mudou aqui, muda no site inteiro */
 :root {
+  --margem: 2.75rem;
+  /* margem lateral única do site: alinhada com o logo TESLA */
   color-scheme: dark;
   /* avisa o navegador que o site já é escuro (evita o "modo escuro forçado") */
   --fundo: #050810;
@@ -8,6 +10,12 @@
   --suave: #8d97ab;
   --fonte-titulo: 'Michroma', 'Space Grotesk', sans-serif;
   --fonte-texto: 'Space Grotesk', system-ui, sans-serif;
+}
+
+@media (max-width: 800px) {
+  :root {
+    --margem: 1.25rem;
+  }
 }
 
 *,

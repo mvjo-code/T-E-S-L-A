@@ -91,7 +91,7 @@ const base = import.meta.env.BASE_URL
   right: -4%;
   bottom: 6%;
   width: 60%;
-  max-width: 56rem;
+  max-width: 72rem;
   z-index: 1;
   animation: chega 2.2s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
@@ -113,10 +113,8 @@ const base = import.meta.env.BASE_URL
 .conteudo {
   position: relative;
   z-index: 2;
-  padding: 0 2.75rem;
+  padding: 0 var(--margem);
   width: 100%;
-  max-width: 85rem;
-  margin: 0 auto;
 }
 
 .chamada {
@@ -159,7 +157,7 @@ h1 {
 
 .controles-hero {
   position: absolute;
-  right: 2.75rem;
+  right: var(--margem);
   bottom: 3.75rem;
   z-index: 3;
 }
@@ -170,10 +168,6 @@ h1 {
     padding-top: 7.5rem;
   }
 
-  .conteudo {
-    padding: 0 1.25rem;
-  }
-
   .carro {
     width: 120%;
     right: -20%;
@@ -181,7 +175,7 @@ h1 {
   }
 
   .controles-hero {
-    right: 1.25rem;
+    right: var(--margem);
     bottom: 1.8rem;
   }
 }

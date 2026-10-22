@@ -32,9 +32,7 @@ import { energia } from './data/energia.js'
 
 <style scoped>
 .conteudo {
-  max-width: 85rem;
-  margin: 0 auto;
-  padding: 1.5rem 2.75rem 5rem;
+  padding: 1.5rem var(--margem) 5rem;
 }
 
 .bloco {
@@ -48,7 +46,7 @@ import { energia } from './data/energia.js'
 
 @media (max-width: 800px) {
   .conteudo {
-    padding: 1rem 1.25rem 4rem;
+    padding: 1rem var(--margem) 4rem;
   }
 
   .bloco {

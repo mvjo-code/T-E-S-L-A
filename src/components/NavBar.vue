@@ -28,7 +28,7 @@ const menuAberto = ref(false) // false = menu do celular fechado
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.4rem 2.75rem;
+  padding: 1.4rem var(--margem);
   font-size: 0.8rem;
 }
 
@@ -47,7 +47,11 @@ ul a {
   transition: color 0.2s;
 }
 
-ul a:hover { text-underline-offset: 0.3rem; color: #ffffffc7; }
+ul a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.3rem;
+  color: red;
+}
 
 .ativo {
   font-weight: 700;
@@ -64,7 +68,7 @@ ul a:hover { text-underline-offset: 0.3rem; color: #ffffffc7; }
 
 @media (max-width: 800px) {
   .nav {
-    padding: 1.1rem 1.25rem;
+    padding: 1.1rem var(--margem);
   }
 
   .menu-btn {
@@ -75,8 +79,8 @@ ul a:hover { text-underline-offset: 0.3rem; color: #ffffffc7; }
     display: none;
     position: absolute;
     top: 4rem;
-    left: 1.25rem;
-    right: 1.25rem;
+    left: var(--margem);
+    right: var(--margem);
     flex-direction: column;
     gap: 1rem;
     padding: 1.25rem;
