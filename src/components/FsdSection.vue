@@ -45,7 +45,7 @@ const base = import.meta.env.BASE_URL
 <style scoped>
 .fsd {
   display: grid;
-  grid-template-columns: 1fr 1.1fr;
+  grid-template-columns: 1.5fr 1.1fr;
   border: 1px solid var(--borda);
   border-radius: 1.25rem;
   overflow: hidden;
