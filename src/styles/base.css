@@ -1,0 +1,48 @@
+/* Variáveis globais: mudou aqui, muda no site inteiro */
+:root {
+  color-scheme: dark;
+  /* avisa o navegador que o site já é escuro (evita o "modo escuro forçado") */
+  --fundo: #050810;
+  --painel: #0b1220;
+  --borda: #1a2438;
+  --suave: #8d97ab;
+  --fonte-titulo: 'Michroma', 'Space Grotesk', sans-serif;
+  --fonte-texto: 'Space Grotesk', system-ui, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--fundo);
+  color: #fff;
+  font-family: var(--fonte-texto);
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--fonte-titulo);
+  font-weight: 400;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+:focus-visible {
+  outline: 0.125rem solid #6ea8ff;
+  outline-offset: 0.2rem;
+}
