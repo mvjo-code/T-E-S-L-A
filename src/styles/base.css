@@ -40,6 +40,18 @@ h3 {
   font-weight: 400;
 }
 
+/* rolagem suave ao clicar nos links do menu (respeita quem reduz movimento) */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* ao ir para uma seção, deixa espaço para o menu fixo não cobrir o título */
+[id] {
+  scroll-margin-top: 5rem;
+}
+
 a {
   color: inherit;
   text-decoration: none;

@@ -1,4 +1,5 @@
 <script setup>
+import NavBar from './components/NavBar.vue'
 import HeroSection from './components/HeroSection.vue'
 import FsdSection from './components/FsdSection.vue'
 import CarrosselRotativo from './components/CarrosselRotativo.vue'
@@ -9,6 +10,7 @@ import { energia } from './data/energia.js'
 </script>
 
 <template>
+  <NavBar />
   <HeroSection />
   <main class="conteudo">
     <FsdSection />
