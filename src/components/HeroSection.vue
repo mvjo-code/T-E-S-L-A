@@ -1,58 +1,82 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import NavBar from './NavBar.vue'
 import BotaoPill from './BotaoPill.vue'
 import ControlesCarrossel from './ControlesCarrossel.vue'
 import { modelosHero } from '../data/modelosHero.js'
 
-// 1) "indice" guarda qual carro está na tela (0 = primeiro). ref() torna o valor
-//    "reativo": quando ele muda, o Vue atualiza a tela sozinho.
+// 1) Qual slide está na tela (0 = primeiro). Quando muda, o Vue atualiza a tela.
 const indice = ref(0)
 
-// 2) "modelo" é calculado a partir do índice. Sempre que o índice muda,
-//    o computed recalcula e o template mostra os dados do carro novo.
+// 2) Dados do slide atual, recalculados sempre que o índice muda
 const modelo = computed(() => modelosHero[indice.value])
 
-// 3) Textos das estatísticas, também derivados do modelo atual
+// 3) Os três números exibidos, montados a partir do modelo atual
 const stats = computed(() => [
   { rotulo: 'Aceleração', valor: modelo.value.aceleracao },
   { rotulo: 'Velocidade', valor: modelo.value.velocidade },
   { rotulo: 'Autonomia', valor: modelo.value.autonomia },
 ])
 
-// 4) Avançar: soma 1 e usa % (resto da divisão) para voltar ao 0 depois do último
+// 4) Lista (comum, não reativa) que guarda cada elemento <video>.
+//    Precisamos deles para mandar tocar e pausar pelo JavaScript.
+const videos = []
+
+// 5) Avançar e voltar: o % faz a lista dar a volta (depois do último, volta ao primeiro)
 function proximo() {
   indice.value = (indice.value + 1) % modelosHero.length
 }
-
-// 5) Voltar: soma o total antes do % para nunca ficar negativo quando está no 0
 function anterior() {
   indice.value = (indice.value - 1 + modelosHero.length) % modelosHero.length
 }
 
-// 6) Caminho base das imagens (funciona local e no GitHub Pages)
+// 6) Sempre que o slide muda, cuidamos dos vídeos:
+//    - o que ENTRA volta ao início e toca (play)
+//    - o que SAIU é pausado depois do fade, para não gastar processador à toa
+watch(indice, (novo, antigo) => {
+  const entrando = videos[novo]
+  if (entrando) {
+    entrando.currentTime = 0
+    entrando.play().catch(() => { }) // o catch evita erro no console se o navegador recusar
+  }
+  setTimeout(() => {
+    // só pausa se ele continuar fora da tela (a pessoa pode ter clicado rápido e voltado)
+    if (antigo !== indice.value) videos[antigo]?.pause()
+  }, 900)
+})
+
 const base = import.meta.env.BASE_URL
 </script>
 
 <template>
   <header class="hero">
-    <NavBar />
-    <div class="brilho"></div>
+    <!-- Um <video> para cada modelo, todos empilhados. Só o "ativo" fica visível (opacity 1);
+         a troca é um fade entre eles. -->
+    <video v-for="(m, i) in modelosHero" :key="m.video" :ref="(el) => (videos[i] = el)" class="fundo"
+      :class="{ ativo: i === indice }" :src="`${base}video/${m.video}`" :autoplay="i === 0"
+      :preload="i === 0 ? 'auto' : 'metadata'" muted loop playsinline
+      @error="$event.target.style.display = 'none'"></video>
 
-    <!-- :key faz o Vue recriar a imagem a cada carro novo, e assim a animação de entrada roda de novo -->
-    <img :key="modelo.nome" class="carro" :src="`${base}img/${modelo.img}`" :alt="modelo.nome"
-      @error="$event.target.style.display = 'none'" />
+    <!-- Camada escura em degradê: garante a leitura do texto sobre qualquer cena -->
+    <div class="sombra"></div>
+
+    <NavBar />
 
     <div class="conteudo">
       <p class="chamada">DEVELOPING THE CARS OF THE FUTURE</p>
-      <h1>{{ modelo.nome }}</h1>
 
-      <ul class="stats">
-        <li v-for="s in stats" :key="s.rotulo">
-          <span>{{ s.rotulo }}</span>
-          <b>{{ s.valor }}</b>
-        </li>
-      </ul>
+      <!-- Transition + :key: quando o modelo muda, o bloco antigo sai e o novo entra com fade -->
+      <Transition name="troca" mode="out-in">
+        <div :key="modelo.nome">
+          <h1>{{ modelo.nome }}</h1>
+          <ul class="stats">
+            <li v-for="s in stats" :key="s.rotulo">
+              <span>{{ s.rotulo }}</span>
+              <b>{{ s.valor }}</b>
+            </li>
+          </ul>
+        </div>
+      </Transition>
 
       <div class="acoes">
         <BotaoPill>Personalizar</BotaoPill>
@@ -72,42 +96,31 @@ const base = import.meta.env.BASE_URL
   overflow: hidden;
   display: flex;
   align-items: center;
-  background: radial-gradient(ellipse at 75% 55%, #1c2a45 0%, #0a1020 55%, #060914 100%);
+  background: #060914;
 }
 
-.brilho {
+.fundo {
   position: absolute;
-  right: 4%;
-  bottom: 10%;
-  width: 52%;
-  aspect-ratio: 16 / 6;
-  border-radius: 50%;
-  background: radial-gradient(ellipse, #2a3550, transparent 70%);
-  filter: blur(2rem);
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.9s ease;
 }
 
-.carro {
+.fundo.ativo {
+  opacity: 1;
+}
+
+/* Escurece mais à esquerda (onde fica o texto) e funde o final do hero com o fundo da página */
+.sombra {
   position: absolute;
-  right: -4%;
-  bottom: 6%;
-  width: 60%;
-  max-width: 72rem;
+  inset: 0;
   z-index: 1;
-  animation: chega 2.2s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-@keyframes chega {
-  from {
-    opacity: 0;
-    transform: translateX(18rem) scale(0.6);
-    filter: blur(0.5rem);
-  }
-
-  to {
-    opacity: 1;
-    transform: none;
-    filter: blur(0);
-  }
+  background:
+    linear-gradient(90deg, rgba(5, 8, 16, 0.85) 0%, rgba(5, 8, 16, 0.45) 45%, rgba(5, 8, 16, 0.1) 100%),
+    linear-gradient(transparent 65%, var(--fundo));
 }
 
 .conteudo {
@@ -118,7 +131,7 @@ const base = import.meta.env.BASE_URL
 }
 
 .chamada {
-  color: var(--suave);
+  color: #b4bccd;
   font-size: 0.7rem;
   letter-spacing: 0.2em;
 }
@@ -140,7 +153,7 @@ h1 {
 .stats span {
   display: block;
   font-size: 0.65rem;
-  color: var(--suave);
+  color: #b4bccd;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
@@ -162,16 +175,26 @@ h1 {
   z-index: 3;
 }
 
+/* Animação de troca do título e dos números */
+.troca-enter-active,
+.troca-leave-active {
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.troca-enter-from {
+  opacity: 0;
+  transform: translateY(1rem);
+}
+
+.troca-leave-to {
+  opacity: 0;
+  transform: translateY(-0.5rem);
+}
+
 @media (max-width: 800px) {
   .hero {
-    align-items: flex-start;
-    padding-top: 7.5rem;
-  }
-
-  .carro {
-    width: 120%;
-    right: -20%;
-    bottom: 6rem;
+    min-height: 40rem;
+    padding-top: 6rem;
   }
 
   .controles-hero {
@@ -181,8 +204,11 @@ h1 {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .carro {
-    animation: none;
+
+  .fundo,
+  .troca-enter-active,
+  .troca-leave-active {
+    transition: none;
   }
 }
 </style>

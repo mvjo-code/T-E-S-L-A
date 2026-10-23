@@ -48,9 +48,8 @@ ul a {
 }
 
 ul a:hover {
-  text-decoration: underline;
-  text-underline-offset: 0.3rem;
-  color: red;
+  transform: scale(1.8);
+  color: rgb(216, 216, 216);
 }
 
 .ativo {

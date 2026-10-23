@@ -101,6 +101,7 @@ function clicar(i) {
   transition: left var(--duracao) var(--ease), width var(--duracao) var(--ease), height var(--duracao) var(--ease), top var(--duracao) var(--ease), opacity var(--duracao);
 }
 
+
 .card.sem-transicao {
   transition: none;
 }
@@ -112,6 +113,7 @@ function clicar(i) {
   top: 0;
   height: 100%;
   z-index: 2;
+  
 }
 
 .esq,
@@ -121,6 +123,19 @@ function clicar(i) {
   height: 32%;
   width: 13%;
   cursor: pointer;
+  opacity: 0.85;
+}
+
+.oculto {
+  left: 43.5%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+.esq:hover,
+.dir:hover {
+  opacity: 1;
 }
 
 .esq {
@@ -143,6 +158,12 @@ function clicar(i) {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 1s ease-out; /* <- suave e lento */
+
+}
+
+.card:hover img {
+  transform: scale(1.04); /* zoom leve na foto, dentro do card */
 }
 
 .sombra {

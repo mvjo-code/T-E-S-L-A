@@ -31,6 +31,18 @@ defineEmits(['anterior', 'proximo'])
   color: #000;
   font-size: 1.1rem;
   cursor: pointer;
+  transition: all 0.2s;
+}
+
+.seta:hover {
+  background: #ffffffe3;
+  color: #000;
+}
+
+.seta:active {
+  background: #fff;
+  color: #000;
+  transform: scale(0.9)
 }
 
 .pontos {
