@@ -4,6 +4,7 @@ import NavBar from './NavBar.vue'
 import BotaoPill from './BotaoPill.vue'
 import ControlesCarrossel from './ControlesCarrossel.vue'
 import { modelosHero } from '../data/modelosHero.js'
+import NumeroAnimado from './NumeroAnimado.vue'
 
 // 1) Qual slide está na tela (0 = primeiro). Quando muda, o Vue atualiza a tela.
 const indice = ref(0)
@@ -13,9 +14,9 @@ const modelo = computed(() => modelosHero[indice.value])
 
 // 3) Os três números exibidos, montados a partir do modelo atual
 const stats = computed(() => [
-  { rotulo: 'Aceleração', valor: modelo.value.aceleracao },
-  { rotulo: 'Velocidade', valor: modelo.value.velocidade },
-  { rotulo: 'Autonomia', valor: modelo.value.autonomia },
+  { rotulo: 'Aceleração', valor: modelo.value.aceleracao, decimais: 1, sufixo: 's' },
+  { rotulo: 'Velocidade', valor: modelo.value.velocidade, decimais: 0, sufixo: 'km/h' },
+  { rotulo: 'Autonomia', valor: modelo.value.autonomia, decimais: 0, sufixo: 'km' },
 ])
 
 // 4) Lista (comum, não reativa) que guarda cada elemento <video>.
@@ -69,10 +70,12 @@ const base = import.meta.env.BASE_URL
       <Transition name="troca" mode="out-in">
         <div :key="modelo.nome">
           <h1>{{ modelo.nome }}</h1>
-          <ul class="stats">
+          <ul class="stats">  
             <li v-for="s in stats" :key="s.rotulo">
-              <span>{{ s.rotulo }}</span>
-              <b>{{ s.valor }}</b>
+              <span class="rotulo">{{ s.rotulo }}</span>
+              <b>
+                <NumeroAnimado :valor="s.valor" :decimais="s.decimais" :sufixo="s.sufixo" />
+              </b>
             </li>
           </ul>
         </div>
@@ -150,7 +153,7 @@ h1 {
   margin-bottom: 3.75rem;
 }
 
-.stats span {
+.stats .rotulo {
   display: block;
   font-size: 0.65rem;
   color: #b4bccd;
@@ -159,7 +162,7 @@ h1 {
 }
 
 .stats b {
-  font-size: 1.15rem;
+  font-size: clamp(1.6rem, 2.4vw, 2.4rem);
   font-weight: 500;
 }
 
@@ -190,6 +193,7 @@ h1 {
   opacity: 0;
   transform: translateY(-0.5rem);
 }
+
 
 @media (max-width: 800px) {
   .hero {
