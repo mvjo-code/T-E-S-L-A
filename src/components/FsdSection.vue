@@ -5,7 +5,7 @@ import { useContagem } from '../composables/useContagem.js'
 // Cada chamada devolve o número atual (valor) e a "ref" do elemento a observar.
 // O nome da variável da ref precisa ser igual ao ref="..." do template.
 const { valor: colisoes, elemento: elColisoes } = useContagem(7)
-const { valor: milhas, elemento: elMilhas } = useContagem(15790405278, 90000)
+const { valor: milhas, elemento: elMilhas } = useContagem(15790405278, 2000)
 
 const base = import.meta.env.BASE_URL
 </script>
