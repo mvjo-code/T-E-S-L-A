@@ -28,12 +28,12 @@ defineProps({ variante: { type: String, default: 'cheio' } })
 }
 
 .cheio {
-  background: #fff;
-  color: #000;
+  background: var(--azul);
+  color: #ffffff;
 }
 
 .cheio:hover {
-  background: #ffffffe8;
+  background: var(--azul-claro);
 }
 
 .vazado {
@@ -43,6 +43,7 @@ defineProps({ variante: { type: String, default: 'cheio' } })
 
 .vazado:hover {
   border-color: rgba(255, 255, 255, 0.323);
+  border-color: var(--azul-claro);
 }
 
 

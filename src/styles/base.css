@@ -10,6 +10,8 @@
   --suave: #8d97ab;
   --fonte-titulo: 'Michroma', 'Space Grotesk', sans-serif;
   --fonte-texto: 'Space Grotesk', system-ui, sans-serif;
+  --azul: #0c5195;
+  --azul-claro: #135699;
 }
 
 @media (max-width: 800px) {
