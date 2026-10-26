@@ -1,5 +1,12 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
+const base = import.meta.env.BASE_URL
+
+const icones = [
+  { arquivo: 'internet.svg', nome: 'Idioma' },
+  { arquivo: 'question.svg', nome: 'Ajuda' },
+  { arquivo: 'user.svg', nome: 'Minha conta' },
+]
 
 // Cada link tem o texto e o destino (href). "#modelos" leva à seção com id="modelos".
 const links = [
@@ -32,14 +39,20 @@ onUnmounted(() => window.removeEventListener('scroll', aoRolar))
 <template>
   <!-- :class="{ rolou }" liga a classe "rolou" quando a variável rolou é true -->
   <nav class="nav" :class="{ rolou }">
-    <a class="logo" href="#">TESLA</a>
+    <a class="logo" href="#" aria-label="Tesla, página inicial">
+      <img :src="`${base}icons/logo_tesla.svg`" alt="logo" />
+    </a>
     <button class="menu-btn" @click="menuAberto = !menuAberto">Menu</button>
     <ul :class="{ aberto: menuAberto }">
       <li v-for="(link, i) in links" :key="link.texto" :class="{ ativo: i === 0 }">
         <a :href="link.href" @click="menuAberto = false">{{ link.texto }}</a>
       </li>
     </ul>
-    <span class="icones" aria-hidden="true">🌐 ? ☺</span>
+    <<div class="icones">
+      <button v-for="icone in icones" :key="icone.arquivo" class="icone" :aria-label="icone.nome">
+        <img :src="`${base}icons/${icone.arquivo}`" alt="" />
+      </button>
+      </div>
   </nav>
 </template>
 
@@ -69,9 +82,37 @@ onUnmounted(() => window.removeEventListener('scroll', aoRolar))
   border-bottom-color: var(--borda);
 }
 
-.logo {
-  font: 0.9rem var(--fonte-titulo);
-  letter-spacing: 0.4em;
+.logo img {
+  display: block;
+  height: 1rem;
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+
+.icones {
+  display: flex;
+  gap: 1.1rem;
+}
+
+.icone {
+  background: none;
+  border: 0;
+  padding: 0.25rem;
+  cursor: pointer;
+  opacity: 0.75;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.icone:hover {
+  opacity: 0.8;
+  transform: translateY(-0.08rem);
+}
+
+.icone img {
+  display: block;
+  width: 1.25rem;
+  height: 1.25rem;
+  filter: brightness(0) invert(1);
 }
 
 ul {
